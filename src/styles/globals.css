@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100;
+}
+
+.matrix-cell {
+  @apply border border-gray-300 p-2 text-center w-12 h-12 flex items-center justify-center transition-all duration-300;
+}
+
+.active-cell {
+  @apply bg-yellow-200;
+}
+
+.key-matrix-cell {
+  @apply border border-blue-300 p-2 text-center w-12 h-12 flex items-center justify-center transition-all duration-300;
+}
