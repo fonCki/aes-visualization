@@ -42,7 +42,9 @@ npm run dev
 
 - **Plaintext**: 11 bytes + 5 zeros → 16 bytes
 - **Key (hex)**: `07 0e a6 e5 c4 da 1a 15 8d 78 15 e2 48 b1 e1 a4`
-- **Final Ciphertext**: `9e 54 58 75 66 6e 02 0f 89 1b f9 4b 9c 15 b8 d1`
+- **Final Ciphertext** (Hex): `625fee822733b8eae1aada3dc31a272f`
+- **Final Ciphertext** (Base64): `625fee822733b8eae1aada3dc31a272f`
+-  **Final Ciphertext** (Binary): `0110001001011111111011101000001000100111001100111011100011101010111000011010101011011010`
 
 ## About 01410 Cryptography 1 at DTU
 
