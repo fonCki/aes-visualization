@@ -404,7 +404,8 @@ export const getAesSteps = (
     description: 'After Initial AddRoundKey', 
     state: afterInitialRound,
     activeIndices: [...Array(16).keys()],
-    explanation: 'The first step is to XOR the state with the initial round key (Round Key 0).'
+    explanation: 'The first step is to XOR the state with the initial round key (Round Key 0).',
+    roundKey: roundKeys[0],
   });
   
   currentState = afterInitialRound;
@@ -450,7 +451,8 @@ export const getAesSteps = (
       description: `Round ${round} - After AddRoundKey`, 
       state: currentState,
       activeIndices: [...Array(16).keys()],
-      explanation: `The state is XORed with Round Key ${round}.`
+      explanation: `The state is XORed with Round Key ${round}.`,
+      roundKey: roundKeys[round],
     });
   }
   

@@ -514,7 +514,7 @@ export default function Home() {
             operationType={getOperationType(steps[currentStep].description)}
             inputState={previousStepState}
             outputState={steps[currentStep].state}
-            roundKey={steps[currentStep].description.includes('AddRoundKey') ? previousStepState : undefined}
+            roundKey={steps[currentStep].roundKey}
           />
         )}
         
