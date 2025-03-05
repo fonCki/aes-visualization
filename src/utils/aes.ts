@@ -315,6 +315,7 @@ export type AesStep = {
   state: number[];
   activeIndices?: number[];  // For highlighting specific cells
   explanation?: string;      // More detailed explanation
+  roundKey?: number[];
 };
 
 export const getAesSteps = (
@@ -322,7 +323,15 @@ export const getAesSteps = (
   key: number[], 
   mode: AesMode = AesMode.ECB,
   padding: PaddingType = PaddingType.PKCS7
-): { steps: AesStep[], finalCiphertext: string, iv?: number[] } => {
+): {
+  steps: AesStep[],
+  finalCiphertext: {
+    base64: string;
+    hex: string;
+    binary: string;
+  },
+  iv?: number[]
+} => {
   const steps: AesStep[] = [];
   let iv: number[] | undefined;
   
@@ -367,11 +376,12 @@ export const getAesSteps = (
     case AesMode.CBC:
       if (!iv) iv = generateIV(); // Failsafe
       // XOR plaintext with IV
-      currentState = initialState.map((byte, i) => byte ^ iv[i]);
+      currentState = initialState.map((byte, i) => byte ^ iv![i])
+
       steps.push({ 
         description: 'Initial State XOR IV', 
         state: currentState,
-        activeIndices: [...Array(16).keys()],
+        activeIndices: Array.from(Array(16).keys()),
         explanation: 'In CBC mode, the plaintext is first XORed with the IV before encryption starts.'
       });
       break;
@@ -403,7 +413,7 @@ export const getAesSteps = (
   steps.push({ 
     description: 'After Initial AddRoundKey', 
     state: afterInitialRound,
-    activeIndices: [...Array(16).keys()],
+    activeIndices: Array.from(Array(16).keys()),
     explanation: 'The first step is to XOR the state with the initial round key (Round Key 0).',
     roundKey: roundKeys[0],
   });
@@ -417,7 +427,7 @@ export const getAesSteps = (
     steps.push({ 
       description: `Round ${round} - After SubBytes`, 
       state: afterSubBytes,
-      activeIndices: [...Array(16).keys()],
+      activeIndices: Array.from(Array(16).keys()),
       explanation: `Each byte is substituted with its corresponding value in the S-box. This is the only non-linear operation in AES.`
     });
     
@@ -436,7 +446,7 @@ export const getAesSteps = (
       steps.push({ 
         description: `Round ${round} - After MixColumns`, 
         state: afterMixColumns,
-        activeIndices: [...Array(16).keys()],
+        activeIndices: Array.from(Array(16).keys()),
         explanation: `Each column is transformed using a linear transformation over Galois Field. This provides diffusion in the cipher.`
       });
       
@@ -450,7 +460,7 @@ export const getAesSteps = (
     steps.push({ 
       description: `Round ${round} - After AddRoundKey`, 
       state: currentState,
-      activeIndices: [...Array(16).keys()],
+      activeIndices: Array.from(Array(16).keys()),
       explanation: `The state is XORed with Round Key ${round}.`,
       roundKey: roundKeys[round],
     });
@@ -470,7 +480,7 @@ export const getAesSteps = (
       steps.push({ 
         description: 'Plaintext XOR Encrypted Counter', 
         state: finalState,
-        activeIndices: [...Array(16).keys()],
+        activeIndices: Array.from(Array(16).keys()),
         explanation: 'In CTR mode, the final step is to XOR the encrypted counter with the plaintext to produce the ciphertext.'
       });
       break;
@@ -620,7 +630,7 @@ export const realAesEncrypt = (
       modeOption = {
         mode: CryptoJS.mode.CTR,
         iv: iv,
-        counter: new CryptoJS.lib.WordArray.init([0, 0, 0, 0], 16),
+        counter: CryptoJS.lib.WordArray.create([0, 0, 0, 0], 16),
         ...paddingOption
       };
       break;
